@@ -1,3 +1,10 @@
+require 'nokogiri'
+require 'open-uri'
+require 'down'
+require 'csv'
+require 'roo'
+require 'spreadsheet'
+
 class SearchesController < ApplicationController
   def new
   end
@@ -184,7 +191,7 @@ class SearchesController < ApplicationController
     
   end
 
-  
+
     private
 
     def data_scraper(url)

@@ -31,7 +31,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'down'
 gem 'httparty'
 gem 'roo'
-gem 'axlsx_rails'
+gem 'cxlsx_rails'
 gem 'spreadsheet'
 gem 'rb2exe'
 
