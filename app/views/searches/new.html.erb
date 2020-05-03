@@ -1,7 +1,11 @@
 <%= form_for(:search, url: searches_create_path) do |f| %>
   <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
+    <%= f.label :shop_name %><br>
+    <%= f.text_field :shop_name, placeholder: 'goldfactoryonline', style: 'width: 50%' %>
+  </div>
+  <div class="field">
+    <%= f.label :location %><br>
+    <%= f.text_field :location, placeholder: 'home/dev/Downloads/ebay_images', style: 'width: 50%' %>
   </div>
   <div class="actions">
     <%= f.submit %>

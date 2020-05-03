@@ -15,9 +15,9 @@ class SearchesController < ApplicationController
     page_count = 3
     # puts 'Please enter shop name'
     # shop = gets.chomp
-    shop = params[:search][:title]
+    shop = params[:search][:shop_name]
     shop = shop.gsub(' ', '').downcase
-    # shop = 'goldfactoryonline'
+    shop = 'goldfactoryonline' unless shop.present?
     data_file = Roo::Spreadsheet.open("data_test.xlsx")
     headers = data_file.row(1)
     book = Spreadsheet::Workbook.new
@@ -31,8 +31,9 @@ class SearchesController < ApplicationController
     # data_file.row(3).each do |value|
     #   sheet1.row(2).push value 
     # end
-    dirname = "ebay_images"
-    FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+    dirname = params[:search][:location]
+    dirname = "/home/dev/Downloads/" unless dirname.present?
+    FileUtils.mkdir_p(dirname+"ebay_images") unless Dir.exists?(dirname)
 
     url = "https://www.ebay.co.uk/str/#{shop}?_pgn=#{page_number.first}"
     cat_doc = data_scraper(url)
@@ -43,7 +44,6 @@ class SearchesController < ApplicationController
       categories_arr.push category.text
       cat_links.push category.css('a').attribute('href').value
     end
-
     cat_links.each_with_index do |url, url_index|
       while url != '#'
         data = data_scraper(url)
@@ -62,7 +62,6 @@ class SearchesController < ApplicationController
           product_images = doc.css('.fs_imgc li')
           img_count = 0
           product_images.first(product_images.count/2).each do |img|
-            # binding.pry
             image = img.css('img').attribute('src').value
             image = image.gsub('s-l64', 's-l500')
             temp_file = Down.download(image)
@@ -73,7 +72,6 @@ class SearchesController < ApplicationController
             img_count = img_count + 1 
           end
 
-          # binding.pry
           # p data_file.row(1)
           price = doc.css('#prcIsum').attribute("content").value.to_f
           web_price = price + (price * 0.10)
@@ -171,7 +169,7 @@ class SearchesController < ApplicationController
             sheet1.row(page_count).push product_value 
           end
           # sheet1.row(page_count).push product_array
-          book.write 'test.xls'
+          book.write "#{dirname}product_data.xls"
           page_count = page_count+1
 
 
