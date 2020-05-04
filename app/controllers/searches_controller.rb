@@ -69,7 +69,7 @@ class SearchesController < ApplicationController
             count_append = img_count > 0 ?  "_#{img_count}" : ""
             @uniq_path = File.join(dirname, product_id+count_append)
             # FileUtils.mv(temp_file.path, "./#{dirname}/#{product_id}#{count_append}")
-            File.rename(temp_file.path, @uniq_path)
+            # File.rename(temp_file.path, @uniq_path)
             FileUtils.mv(temp_file.path, @uniq_path)
             img_count = img_count + 1 
           end
