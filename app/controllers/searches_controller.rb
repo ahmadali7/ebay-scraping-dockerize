@@ -31,16 +31,17 @@ class SearchesController < ApplicationController
     # data_file.row(3).each do |value|
     #   sheet1.row(2).push value 
     # end
-    dirname = params[:search][:location]
-    dirname = "/home/dev/Downloads/" unless dirname.present?
-    FileUtils.mkdir_p(dirname+"ebay_images") unless Dir.exists?(dirname)
+    dirname = params[:search][:shop_name]
+    dirname = "./#{dirname}" unless dirname.present?
+    FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+    # FileUtils.mkdir_p(dirname+"ebay_images") unless Dir.exists?(dirname)
 
     url = "https://www.ebay.co.uk/str/#{shop}?_pgn=#{page_number.first}"
     cat_doc = data_scraper(url)
     categories = cat_doc.css('.srp-refine__category__item li')
     categories_arr = []
     cat_links = []
-    categories.each do |category|
+    categories.first(2).each do |category|
       categories_arr.push category.text
       cat_links.push category.css('a').attribute('href').value
     end
@@ -169,7 +170,7 @@ class SearchesController < ApplicationController
             sheet1.row(page_count).push product_value 
           end
           # sheet1.row(page_count).push product_array
-          book.write "#{dirname}product_data.xls"
+          book.write "#{dirname}.xls"
           page_count = page_count+1
 
 
@@ -186,9 +187,29 @@ class SearchesController < ApplicationController
     end
     # Search.scrap_data
     # @searches = Search.all
+    session[:shop_name] = params[:search][:shop_name]
+    redirect_to searches_index_path
     
   end
 
+  def index
+  	@shop = session[:shop_name]
+  end
+
+  def download_xls
+  	@shop = session[:shop_name]
+  	file_path = "#{Rails.root}/#{@shop}.xls"
+  	send_file(file_path, :type=>"xls", x_sendfile: true)
+  end
+
+	def download_images
+		@shop = session[:shop_name] || "goldfactoryonline"
+		# Dir.chdir @shop
+		# binding.pry
+    `zip -r "#{@shop}.zip" "#{@shop}"`
+  	file_path = "#{Rails.root}/#{@shop}.zip"
+  	send_file(file_path, :type=>"xls", x_sendfile: true)
+	end
 
     private
 
