@@ -32,8 +32,8 @@ class SearchesController < ApplicationController
     #   sheet1.row(2).push value 
     # end
     dirname = params[:search][:shop_name]
-    dirname = "./#{dirname}" unless dirname.present?
-    FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+    dirname = "./tmp/goldfactoryonline" unless dirname.present?
+    FileUtils.mkdir_p('tmp/'+dirname) unless Dir.exists?(dirname)
     # FileUtils.mkdir_p(dirname+"ebay_images") unless Dir.exists?(dirname)
 
     url = "https://www.ebay.co.uk/str/#{shop}?_pgn=#{page_number.first}"
@@ -67,7 +67,7 @@ class SearchesController < ApplicationController
             image = image.gsub('s-l64', 's-l500')
             temp_file = Down.download(image)
             count_append = img_count > 0 ?  "_#{img_count}" : ""
-            @uniq_path = File.join(dirname, product_id+count_append)
+            @uniq_path = File.join("tmp/"+dirname, product_id+count_append)
             # FileUtils.mv(temp_file.path, "./#{dirname}/#{product_id}#{count_append}")
             File.rename(temp_file.path, @uniq_path)
             img_count = img_count + 1 
@@ -170,7 +170,7 @@ class SearchesController < ApplicationController
             sheet1.row(page_count).push product_value 
           end
           # sheet1.row(page_count).push product_array
-          book.write "#{dirname}.xls"
+          book.write "./tmp/#{dirname}.xls"
           page_count = page_count+1
 
 
@@ -198,15 +198,15 @@ class SearchesController < ApplicationController
 
   def download_xls
   	@shop = session[:shop_name]
-  	file_path = "#{Rails.root}/#{@shop}.xls"
+  	file_path = "#{Rails.root}/tmp/#{@shop}.xls"
   	send_file(file_path, :type=>"xls", x_sendfile: true)
   end
 
 	def download_images
-		@shop = session[:shop_name] || "goldfactoryonline"
+		@shop = session[:shop_name]
 		# Dir.chdir @shop
 		# binding.pry
-    `zip -r "#{@shop}.zip" "#{@shop}"`
+    `zip -r "#{@shop}.zip" "./tmp/#{@shop}"`
   	file_path = "#{Rails.root}/#{@shop}.zip"
   	send_file(file_path, :type=>"xls", x_sendfile: true)
 	end
