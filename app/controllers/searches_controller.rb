@@ -67,7 +67,7 @@ class SearchesController < ApplicationController
             image = image.gsub('s-l64', 's-l1600')
             temp_file = Down.download(image)
             count_append = img_count > 0 ?  "_#{img_count}" : ""
-            @uniq_path = File.join(dirname, product_id+count_append+'.jpg')
+            @uniq_path = File.join(dirname, product_id+count_append+File.extname(temp_file))
             # FileUtils.mv(temp_file.path, "./#{dirname}/#{product_id}#{count_append}")
             # File.rename(temp_file.path, @uniq_path)
             FileUtils.mv(temp_file.path, @uniq_path)
@@ -197,11 +197,11 @@ class SearchesController < ApplicationController
   end
 
   def index
-  	@shop = session[:shop_name]
+  	@shop = session[:shop_name] || "goldfactoryonline"
   end
 
   def download_xls
-  	@shop = session[:shop_name]
+  	@shop = session[:shop_name] || "goldfactoryonline"
   	file_path = "#{Rails.root}/#{@shop}.xls"
   	send_file(file_path, :type=>"xls", x_sendfile: true)
   end
