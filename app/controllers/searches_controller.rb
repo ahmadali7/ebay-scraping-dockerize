@@ -41,11 +41,11 @@ class SearchesController < ApplicationController
     categories = cat_doc.css('.srp-refine__category__item li')
     categories_arr = []
     cat_links = []
-    categories.first(2).each do |category|
+    categories.each do |category|
       categories_arr.push category.text
       cat_links.push category.css('a').attribute('href').value
     end
-    cat_links.each_with_index do |url, url_index|
+    cat_links.first(2).each_with_index do |url, url_index|
       while url != '#'
         data = data_scraper(url)
         items = data.css('.s-item__wrapper')
@@ -64,10 +64,10 @@ class SearchesController < ApplicationController
           img_count = 0
           product_images.first(product_images.count/2).each do |img|
             image = img.css('img').attribute('src').value
-            image = image.gsub('s-l64', 's-l500')
+            image = image.gsub('s-l64', 's-l1600')
             temp_file = Down.download(image)
             count_append = img_count > 0 ?  "_#{img_count}" : ""
-            @uniq_path = File.join(dirname, product_id+count_append)
+            @uniq_path = File.join(dirname, product_id+count_append+'.jpg')
             # FileUtils.mv(temp_file.path, "./#{dirname}/#{product_id}#{count_append}")
             # File.rename(temp_file.path, @uniq_path)
             FileUtils.mv(temp_file.path, @uniq_path)
@@ -97,8 +97,11 @@ class SearchesController < ApplicationController
 
           des_link=doc.css('iframe').attribute('src').value
           des_doc = data_scraper(des_link)
-          description = des_doc.css('#ds_div').text
-
+          description = des_doc.css('.template_content').text.presence || des_doc.css('#ds_div').text
+          des = description
+          i = des.downcase.index('gram')
+          weight = i.present? ? des&.slice(i-10..i)&.match(/\d+\.\d+/)&.to_s : ''
+          weight = weight.to_s + " garams" if weight.present?
           p '***************************************************************'
           p product_id
           p product_name
@@ -146,7 +149,7 @@ class SearchesController < ApplicationController
           product_array << ''
           product_array << ''
           product_array << ''
-          product_array << hashes["Metal Purity"]
+          product_array << weight
           product_array << hashes["Gender"]
           product_array << hashes["Ring Size"]
           product_array << hashes["Width (mm)"]
