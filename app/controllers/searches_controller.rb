@@ -47,7 +47,7 @@ class SearchesController < ApplicationController
 	      cat_links.push category.css('a').attribute('href')&.value
 	    end
     end
-    cat_links.first(2).each_with_index do |url, url_index|
+    cat_links.each_with_index do |url, url_index|
       while url != '#'
         data = data_scraper(url)
         items = data.css('.s-item__wrapper')
