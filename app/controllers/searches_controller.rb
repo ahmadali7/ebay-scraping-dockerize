@@ -43,7 +43,7 @@ class SearchesController < ApplicationController
     cat_links = []
     categories.each do |category|
       categories_arr.push category.text
-      cat_links.push category.css('a').attribute('href').value
+      cat_links.push category.css('a').attribute('href')&.value
     end
     cat_links.first(2).each_with_index do |url, url_index|
       while url != '#'
@@ -61,7 +61,7 @@ class SearchesController < ApplicationController
           product_id = doc.css('#descItemNumber').text
           product_name = doc.css('#itemTitle').text.gsub('Details about', '').strip
           product_images = doc.css('.fs_imgc li')
-          img_count = 0
+          img_count = 1
           product_images.first(product_images.count/2).each do |img|
             image = img.css('img').attribute('src').value
             image = image.gsub('s-l64', 's-l1600')
@@ -100,8 +100,7 @@ class SearchesController < ApplicationController
           description = des_doc.css('.template_content').text.presence || des_doc.css('#ds_div').text
           des = description
           i = des.downcase.index('gram')
-          weight = i.present? ? des&.slice(i-10..i)&.match(/\d+\.\d+/)&.to_s : ''
-          weight = weight.to_s + " garams" if weight.present?
+          weight = i.present? ? des&.slice(i-10..i)&.match(/\d+,\d+\.\d+|\d+\.\d+|\d+/)&.to_s : ''
           p '***************************************************************'
           p product_id
           p product_name
