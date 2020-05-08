@@ -42,8 +42,10 @@ class SearchesController < ApplicationController
     categories_arr = []
     cat_links = []
     categories.each do |category|
-      categories_arr.push category.text
-      cat_links.push category.css('a').attribute('href')&.value
+    	if cat_links.push category.css('a').attribute('href')&.value.present?
+	      categories_arr.push category.text
+	      cat_links.push category.css('a').attribute('href')&.value
+	    end
     end
     cat_links.first(2).each_with_index do |url, url_index|
       while url != '#'
