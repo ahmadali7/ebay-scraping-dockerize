@@ -203,7 +203,7 @@ class SearchesController < ApplicationController
   end
 
   def download_xls
-  	@shop = params[name]
+  	@shop = params[:name]
   	file_path = "#{Rails.root}/#{@shop}.xls"
   	send_file(file_path, :type=>"xls", x_sendfile: true)
   end
