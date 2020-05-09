@@ -1,6 +1,14 @@
-<h1>Dowload Files</h1>
-<h2><%= @shop %></h2>
-<a href="<%= searches_download_xls_path %>">Dowload Excel File</a>
-<br>
-<a href="<%= searches_download_images_path %>">Dowload images Zip</a>
 
+<% if @shops.present? %>
+	<% @shops.each do |shop| %>
+		<h1>Dowload Files</h1>
+		<h2><%= shop.name %></h2>
+		<a href="<%= searches_download_xls_path(name: shop.name) %>">Dowload Excel File</a>
+		<br>
+		<a href="<%= searches_download_images_path(name: shop.name) %>">Dowload images Zip</a>
+	<% end %>
+<% else %>
+	<h2>No shop found please search a shop first.</h2>
+<% end %>
+<br>
+<%= link_to 'Back to Search page', searches_new_path %>

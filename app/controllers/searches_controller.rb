@@ -42,7 +42,7 @@ class SearchesController < ApplicationController
     categories_arr = []
     cat_links = []
     categories.each do |category|
-    	if cat_links.push category.css('a').attribute('href')&.value.present?
+    	if category.css('a').attribute('href')&.value.present?
 	      categories_arr.push category.text
 	      cat_links.push category.css('a').attribute('href')&.value
 	    end
@@ -193,22 +193,23 @@ class SearchesController < ApplicationController
     # Search.scrap_data
     # @searches = Search.all
     session[:shop_name] = params[:search][:shop_name]
+    Shop.first_or_create(name: params[:search][:shop_name])
     redirect_to searches_index_path
     
   end
 
   def index
-  	@shop = session[:shop_name] || "goldfactoryonline"
+  	@shops = Shop.all
   end
 
   def download_xls
-  	@shop = session[:shop_name] || "goldfactoryonline"
+  	@shop = params[name]
   	file_path = "#{Rails.root}/#{@shop}.xls"
   	send_file(file_path, :type=>"xls", x_sendfile: true)
   end
 
 	def download_images
-		@shop = session[:shop_name] || "goldfactoryonline"
+		@shop = params[:name]
 		# Dir.chdir @shop
 		# binding.pry
     `zip -r "#{@shop}.zip" "#{@shop}"`
