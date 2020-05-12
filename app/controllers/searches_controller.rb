@@ -104,6 +104,7 @@ class SearchesController < ApplicationController
           i = des.downcase.index('gram')
           weight = i.present? ? des&.slice(i-10..i)&.match(/\d+,\d+\.\d+|\d+\.\d+|\d+/)&.to_s : ''
           p '***************************************************************'
+          p page_count
           p product_id
           p product_name
           p hashes
