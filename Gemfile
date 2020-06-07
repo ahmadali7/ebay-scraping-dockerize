@@ -33,8 +33,7 @@ gem 'httparty'
 gem 'roo'
 gem 'caxlsx_rails'
 gem 'spreadsheet'
-gem 'rb2exe'
-
+gem "rack-timeout"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
