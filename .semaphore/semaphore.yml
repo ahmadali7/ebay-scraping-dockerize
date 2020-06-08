@@ -8,11 +8,11 @@ blocks:
   - name: Build
     task:
       jobs:
-        - name: Build drkiqq
+        - name: Build ebay-scraping-dockerize
           commands:
-            - 'docker pull $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest || true'
-            - 'docker build -t $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest --cache-from=$DOCKER_USERNAME/dockerizing-ruby-drkiq:latest --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f Dockerfile.production .'
-            - 'docker push $DOCKER_USERNAME/dockerizing-ruby-drkiq:latest'
+            - 'docker pull $DOCKER_USERNAME/ebay-scraping-dockerize:latest || true'
+            - 'docker build -t $DOCKER_USERNAME/ebay-scraping-dockerize:latest --cache-from=$DOCKER_USERNAME/ebay-scraping-dockerize:latest --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f Dockerfile.production .'
+            - 'docker push $DOCKER_USERNAME/ebay-scraping-dockerize:latest'
       secrets:
         - name: dockerhub
       prologue:
